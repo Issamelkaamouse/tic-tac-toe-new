@@ -1,24 +1,20 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
-
+import { importProvidersFrom } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { FirestoreModule,  } from '@angular/fire/firestore';
+import { environment } from '../environments/environment.development';
 import { routes } from './app.routes';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-import { environment } from '../environments/environment';  // Import environment
-import { Firestore } from 'firebase/firestore';
+import { AngularFireModule } from '@angular/fire/compat';
+import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
 
 
+const modules = [
+  RouterModule.forRoot(routes),
+  BrowserAnimationsModule,
+  AngularFireModule.initializeApp(environment.firebaseConfig),
+  FirestoreModule,
+];
 
-
-export const appConfig: ApplicationConfig = {
-  providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
-    ReactiveFormsModule,   
-    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
-
-    // Firestore initialization
-    provideFirestore(() => getFirestore()),
-  ]
-};
+export const providers = [
+  importProvidersFrom(modules),
+  provideAnimations()
+];

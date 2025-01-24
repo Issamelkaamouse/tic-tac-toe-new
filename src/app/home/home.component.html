@@ -1,0 +1,94 @@
+<div class="p-10 flex items-center justify-center bg-gray-100 min-h-screen">
+    <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
+        <h1 class="text-3xl font-semibold text-center mb-6">Tic Tac Toe</h1>
+
+        <!-- Buttons to Open Popups -->
+        <div class="flex justify-between " *ngIf="!waiting">
+            <button class="w-1/2 bg-blue-500 text-white py-2 px-4 rounded-md mr-2 hover:bg-blue-600"
+                (click)="showCreateRoomPopup = true">
+                Create Room
+            </button>
+            <button class="w-1/2 bg-green-500 text-white py-2 px-4 rounded-md ml-2 hover:bg-green-600"
+                (click)="showJoinRoomPopup = true">
+                Join Room
+            </button>
+        </div>
+
+        <!-- Create Room Popup -->
+        <div *ngIf="showCreateRoomPopup"
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+                <h2 class="text-xl font-bold text-center mb-4">Create Room</h2>
+                <form [formGroup]="createRoomForm" (ngSubmit)="createRoom()">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Enter Your Name</label>
+                        <input type="text" formControlName="playerName" class="w-full p-2 border rounded"
+                            placeholder="Enter your name" />
+                        <div *ngIf="createRoomForm.controls['playerName'].invalid && createRoomForm.controls['playerName'].touched"
+                            class="text-red-500 text-sm mt-1">
+                            <p *ngIf="createRoomForm.controls['playerName'].hasError('required')">Name is required.</p>
+                            <p *ngIf="createRoomForm.controls['playerName'].hasError('minlength')">Name must be at least
+                                3 characters.</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between">
+                        <button type="button" class="bg-gray-400 text-white py-2 px-4 rounded-md hover:bg-gray-500"
+                            (click)="showCreateRoomPopup = false">
+                            Cancel
+                        </button>
+                        <button type="submit" [disabled]="createRoomForm.invalid"
+                            class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 disabled:bg-gray-400">
+                            Create Room
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Join Room Popup -->
+        <div *ngIf="showJoinRoomPopup"
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+                <h2 class="text-xl font-bold text-center mb-4">Join Room</h2>
+                <form [formGroup]="joinRoomForm" (ngSubmit)="joinRoom()">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Room ID</label>
+                        <input type="text" formControlName="roomId" class="w-full p-2 border rounded"
+                            placeholder="Enter Room ID" />
+                        <div *ngIf="joinRoomForm.controls['roomId'].invalid && joinRoomForm.controls['roomId'].touched"
+                            class="text-red-500 text-sm mt-1">
+                            <p>Room ID is required.</p>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Your Name</label>
+                        <input type="text" formControlName="playerName" class="w-full p-2 border rounded"
+                            placeholder="Enter your name" />
+                        <div *ngIf="joinRoomForm.controls['playerName'].invalid && joinRoomForm.controls['playerName'].touched"
+                            class="text-red-500 text-sm mt-1">
+                            <p *ngIf="joinRoomForm.controls['playerName'].hasError('required')">Name is required.</p>
+                            <p *ngIf="joinRoomForm.controls['playerName'].hasError('minlength')">Name must be at least 3
+                                characters.</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between">
+                        <button type="button" class="bg-gray-400 text-white py-2 px-4 rounded-md hover:bg-gray-500"
+                            (click)="showJoinRoomPopup = false">
+                            Cancel
+                        </button>
+                        <button type="submit" [disabled]="joinRoomForm.invalid"
+                            class="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 disabled:bg-gray-400">
+                            Join Room
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div *ngIf="waiting" class="text-center">
+            <p class="text-lg text-gray-700">Waiting for another player to join...</p>
+            <p class="text-lg text-gray-500">Room ID: <span class="font-bold">{{ roomId }}</span></p>
+            <p class="text-lg text-gray-500">{{ countdown }} seconds remaining</p>
+        </div>
+    </div>
+</div>
